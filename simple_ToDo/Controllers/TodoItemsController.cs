@@ -82,19 +82,47 @@ namespace simple_ToDo.Controllers
         }
 
         // GET: TodoItems/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var allStatuses = await _context.ToDoStatus
+              .Select(d => new SelectListItem() { Text = d.Title, Value = d.Id.ToString() })
+              .ToListAsync();
+            var item = await _context.TodoItem.FirstOrDefaultAsync(i => i.Id == id);
+            var loggedInUser = await GetCurrentUserAsync();
+
+            if (item.ApplicationUserId != loggedInUser.Id)
+            {
+                return NotFound();
+            }
+            var viewModel = new TodoItemViewModel()
+            {
+                Id = item.Id,
+                Title = item.Title,
+                TodoStatusId = item.TodoStatusId,
+                ToDoStatusOptions = allStatuses
+            };
+
+            return View(viewModel);
         }
 
         // POST: TodoItems/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, TodoItemViewModel viewModel)
         {
             try
             {
-                // TODO: Add update logic here
+                var user = await GetCurrentUserAsync();
+                var item = new TodoItem()
+                {
+                    Id = viewModel.Id,
+                    Title = viewModel.Title,
+                    TodoStatusId = viewModel.TodoStatusId,
+                    ApplicationUserId = user.Id
+                };
+
+                _context.TodoItem.Update(item);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -105,19 +133,22 @@ namespace simple_ToDo.Controllers
         }
 
         // GET: TodoItems/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var item = await _context.TodoItem.Include(s => s.TodoStatus).FirstOrDefaultAsync(i => i.Id == id);
+
+            return View(item);
         }
 
         // POST: TodoItems/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, TodoItem item)
         {
             try
             {
-                // TODO: Add delete logic here
+                _context.TodoItem.Remove(item);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
