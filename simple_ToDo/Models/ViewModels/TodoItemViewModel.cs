@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace simple_ToDo.Models
+namespace simple_ToDo.Models.ViewModels
 {
-    public class TodoItem
+    public class TodoItemViewModel
     {
-  
+        [Required]
         public int Id { get; set; }
         [Required]
 
@@ -22,5 +23,7 @@ namespace simple_ToDo.Models
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public List<SelectListItem> ToDoStatusOptions { get; set; }
+
     }
 }

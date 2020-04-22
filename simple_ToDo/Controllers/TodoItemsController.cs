@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using simple_ToDo.Data;
 using simple_ToDo.Models;
+using simple_ToDo.Models.ViewModels;
 
 namespace simple_ToDo.Controllers
 {
@@ -43,20 +45,34 @@ namespace simple_ToDo.Controllers
         }
 
         // GET: TodoItems/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var allStatuses = await _context.ToDoStatus
+               .Select(d => new SelectListItem() { Text = d.Title, Value = d.Id.ToString() })
+               .ToListAsync();
+
+            var viewModel = new TodoItemViewModel();
+            viewModel.ToDoStatusOptions = allStatuses;
+            return View(viewModel);
         }
 
         // POST: TodoItems/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(TodoItemViewModel viewItem)
         {
             try
             {
-                // TODO: Add insert logic here
+                var user = await GetCurrentUserAsync();
+                var item = new TodoItem()
+                {
+                    Title = viewItem.Title,
+                    TodoStatusId = viewItem.TodoStatusId
+                };
+                item.ApplicationUserId = user.Id;
 
+                _context.TodoItem.Add(item);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch
