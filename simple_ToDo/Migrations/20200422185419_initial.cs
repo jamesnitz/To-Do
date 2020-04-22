@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace simple_ToDo.Migrations
 {
-    public partial class Inital : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace simple_ToDo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TodoStatus",
+                name: "ToDoStatus",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -58,7 +58,7 @@ namespace simple_ToDo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TodoStatus", x => x.Id);
+                    table.PrimaryKey("PK_ToDoStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,9 +187,9 @@ namespace simple_ToDo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TodoItem_TodoStatus_TodoStatusId",
+                        name: "FK_TodoItem_ToDoStatus_TodoStatusId",
                         column: x => x.TodoStatusId,
-                        principalTable: "TodoStatus",
+                        principalTable: "ToDoStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -271,7 +271,7 @@ namespace simple_ToDo.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "TodoStatus");
+                name: "ToDoStatus");
         }
     }
 }

@@ -10,8 +10,8 @@ using simple_ToDo.Data;
 namespace simple_ToDo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200422182952_Inital")]
-    partial class Inital
+    [Migration("20200422185419_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -268,7 +268,7 @@ namespace simple_ToDo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TodoStatus");
+                    b.ToTable("ToDoStatus");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
