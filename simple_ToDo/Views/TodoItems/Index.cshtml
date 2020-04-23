@@ -3,14 +3,13 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>Index</h1>
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<a type="button" class="btn btn-secondary" asp-action="Index">View tasks Tasks</a>
+<a type="button" class="btn btn-secondary" asp-action="Index">View all Tasks</a>
 <a type="button" class="btn btn-secondary" asp-action="Index" asp-route-complete="true">View completed tasks</a>
+<a type="button" class="btn btn-secondary" asp-action="Index" asp-route-progress="true">In progress</a>
 <a type="button" class="btn btn-secondary" asp-action="Index" asp-route-not_Started="true">View not started tasks</a>
 <table class="table">
     <thead>
