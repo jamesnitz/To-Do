@@ -27,13 +27,33 @@ namespace simple_ToDo.Controllers
         }
 
         // GET: TodoItems
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(bool complete, bool not_Started)
         {
             var user = await GetCurrentUserAsync();
-            var items = await _context.TodoItem
-                .Include(s => s.TodoStatus)
-                .Where(s => s.ApplicationUserId == user.Id)
-                .ToListAsync();
+            List<TodoItem> items = new List<TodoItem>();
+            if (complete == true)
+            {
+             items = await _context.TodoItem
+                    .Include(s => s.TodoStatus)
+                    .Where(s => s.ApplicationUserId == user.Id)
+                    .Where(s => s.TodoStatusId == 3)
+                    .ToListAsync();
+            }
+            else if (not_Started == true)
+            {
+                items = await _context.TodoItem
+                    .Include(s => s.TodoStatus)
+                    .Where(s => s.ApplicationUserId == user.Id)
+                    .Where(s => s.TodoStatusId == 2)
+                    .ToListAsync();
+            }
+            else
+            {
+                items = await _context.TodoItem
+                    .Include(s => s.TodoStatus)
+                    .Where(s => s.ApplicationUserId == user.Id)
+                    .ToListAsync();
+            }
 
             return View(items);
         }
