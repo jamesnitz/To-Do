@@ -27,11 +27,11 @@ namespace simple_ToDo.Controllers
         }
 
         // GET: TodoItems
-        public async Task<ActionResult> Index(bool complete, bool not_Started, bool progress)
+        public async Task<ActionResult> Index(string status)
         {
             var user = await GetCurrentUserAsync();
             List<TodoItem> items = new List<TodoItem>();
-            if (complete == true)
+            if (status == "finished")
             {
              items = await _context.TodoItem
                     .Include(s => s.TodoStatus)
@@ -39,7 +39,7 @@ namespace simple_ToDo.Controllers
                     .Where(s => s.TodoStatusId == 3)
                     .ToListAsync();
             }
-            else if (progress == true)
+            else if (status == "progress")
             {
                 items = await _context.TodoItem
                     .Include(s => s.TodoStatus)
@@ -47,7 +47,7 @@ namespace simple_ToDo.Controllers
                     .Where(s => s.TodoStatusId == 2)
                     .ToListAsync();
             }
-            else if (not_Started == true)
+            else if (status == "notStarted")
             {
                 items = await _context.TodoItem
                     .Include(s => s.TodoStatus)
